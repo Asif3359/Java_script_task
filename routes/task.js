@@ -1,4 +1,3 @@
-// task.js
 var express = require("express");
 var router = express.Router();
 
@@ -16,24 +15,34 @@ function lcm(a, b) {
 }
 
 router.get("/", function (req, res) {
-  const x = req.query.x;
-  const y = req.query.y;
+  let x = req.query.x;
+  let y = req.query.y;
+
+  if (!x || !y) {
+    res.send("NaN");
+    return;
+  }
+
+  // 🔥 REMOVE { }
+  x = x.replace(/[{}]/g, "");
+  y = y.replace(/[{}]/g, "");
+
+  const nx = Number(x);
+  const ny = Number(y);
 
   if (
-    !x ||
-    !y ||
-    isNaN(x) ||
-    isNaN(y) ||
-    Number(x) <= 0 ||
-    Number(y) <= 0 ||
-    !Number.isInteger(Number(x)) ||
-    !Number.isInteger(Number(y))
+    isNaN(nx) ||
+    isNaN(ny) ||
+    nx <= 0 ||
+    ny <= 0 ||
+    !Number.isInteger(nx) ||
+    !Number.isInteger(ny)
   ) {
     res.send("NaN");
     return;
   }
 
-  const result = lcm(Number(x), Number(y));
+  const result = lcm(nx, ny);
   res.send(result.toString());
 });
 
