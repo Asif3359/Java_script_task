@@ -1,21 +1,20 @@
 var express = require("express");
 var router = express.Router();
 
-function gcd(a, b) {
-  while (b !== 0) {
-    let temp = b;
+function gcdBigInt(a, b) {
+  while (b !== 0n) {
+    const temp = b;
     b = a % b;
     a = temp;
   }
   return a;
 }
 
-function lcm(a, b) {
-  return (a * b) / gcd(a, b);
+function lcmBigInt(a, b) {
+  return (a / gcdBigInt(a, b)) * b;
 }
 
 router.get("/", function (req, res) {
-  // Always respond with plain text
   res.type("text/plain");
 
   let x = req.query.x;
@@ -26,26 +25,25 @@ router.get("/", function (req, res) {
     return;
   }
 
-  // 🔥 REMOVE { }
   x = x.replace(/[{}]/g, "");
   y = y.replace(/[{}]/g, "");
 
-  const nx = Number(x);
-  const ny = Number(y);
-
-  if (
-    isNaN(nx) ||
-    isNaN(ny) ||
-    nx <= 0 ||
-    ny <= 0 ||
-    !Number.isInteger(nx) ||
-    !Number.isInteger(ny)
-  ) {
+  const natRegex = /^[0-9]+$/;
+  if (!natRegex.test(x) || !natRegex.test(y)) {
     res.send("NaN");
     return;
   }
 
-  const result = lcm(nx, ny);
+  if (x === "0" || y === "0") {
+    res.send("NaN");
+    return;
+  }
+
+  const nx = BigInt(x);
+  const ny = BigInt(y);
+
+  const result = lcmBigInt(nx, ny);
+
   res.send(result.toString());
 });
 
