@@ -9,6 +9,9 @@ var taskRouter = require("./routes/task");
 
 var app = express();
 
+// Disable ETag to avoid 304 responses; always send fresh body
+app.disable("etag");
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");

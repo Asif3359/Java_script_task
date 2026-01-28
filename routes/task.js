@@ -15,6 +15,9 @@ function lcm(a, b) {
 }
 
 router.get("/", function (req, res) {
+  // Always respond with plain text
+  res.type("text/plain");
+
   let x = req.query.x;
   let y = req.query.y;
 
